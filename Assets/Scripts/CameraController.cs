@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField]
     private Transform followTarget; 
-    private Vector3 offset = Vector3.back; 
+    private Vector3 offset = Vector3.back * 10f; 
     private float moveSpeed = 10f;
 
     public void Update()
