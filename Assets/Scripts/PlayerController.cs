@@ -5,14 +5,13 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    private Vector2Int mapExtents;
+    private Vector2Int mapHalfSize;
 
     private Vector2Int inputDir = Vector2Int.right;
     private Vector2Int moveDir = Vector2Int.right;
     private float remainingDist;
     private float moveSpeed = 5f;
 
-    private HashSet<Vector2Int> area = new();
     private List<Vector2Int> trail = new();
     private LineRenderer lineRenderer;
 
@@ -21,41 +20,36 @@ public class PlayerController : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
     }
 
-    private void Start()
-    {
-        area.Add(Vector2Int.RoundToInt(transform.position));
-    }
-
     private void Update()
     {
-        InputUpdate();
-        MoveUpdate();
-        AddTrail();
-        DrawTrail();
+        UpdateInput();
+        UpdateMove();
+        UpdateTrail();
+        TrailRendering();
     }
 
-    private void InputUpdate()
+    private void UpdateInput()
     {
-        var inputVec = Vector2Int.zero;
         var roundPos = Vector2Int.RoundToInt(transform.position);
+        var inputVec = Vector2Int.zero;
         inputVec.x = (int)Input.GetAxisRaw("Horizontal");
         inputVec.y = (int)Input.GetAxisRaw("Vertical");
         if (inputVec != Vector2Int.zero && inputVec != Vector2Int.one && 
-            Mathf.Abs(roundPos.x + inputVec.x) <= mapExtents.x &&
-            Mathf.Abs(roundPos.y + inputVec.y) <= mapExtents.y)
+            Mathf.Abs(roundPos.x + inputVec.x) <= mapHalfSize.x &&
+            Mathf.Abs(roundPos.y + inputVec.y) <= mapHalfSize.y)
         {
             inputDir = inputVec;
         }
     }
 
-    private void MoveUpdate()
+    private void UpdateMove()
     {
         if (remainingDist == 0f)
         {
             moveDir = inputDir;
             var roundPos = Vector2Int.RoundToInt(transform.position);
-            if (Mathf.Abs(roundPos.x + moveDir.x) <= mapExtents.x &&
-                Mathf.Abs(roundPos.y + moveDir.y) <= mapExtents.y)
+            if (Mathf.Abs(roundPos.x + moveDir.x) <= mapHalfSize.x &&
+                Mathf.Abs(roundPos.y + moveDir.y) <= mapHalfSize.y)
             {
                 remainingDist = 1f;
             }
@@ -65,7 +59,7 @@ public class PlayerController : MonoBehaviour
         remainingDist -= moveAmount;
     }
 
-    private void AddTrail()
+    private void UpdateTrail()
     {
         var roundPos = Vector2Int.RoundToInt(transform.position);
         if (trail.Contains(roundPos))
@@ -77,30 +71,12 @@ public class PlayerController : MonoBehaviour
         trail.Add(roundPos);
     }
 
-    private void DrawTrail()
+    private void TrailRendering()
     {
         lineRenderer.positionCount = trail.Count;
         for (int i = 0; i < trail.Count; i++)
         {
             lineRenderer.SetPosition(i, (Vector3)(Vector2)trail[i]);
-        }
-    }
-
-    private void FillArea()
-    {
-        for (int y = -mapExtents.y; y < mapExtents.y; y++)
-        {
-            for (int x = -mapExtents.x; x < mapExtents.x; x++)
-            {
-                bool hasRight = area.Any((p) => p.y == y && p.x > x);
-                bool hasLeft = area.Any((p) => p.y == y && p.x < x);
-                bool hasTop = area.Any((p) => p.x == x && p.y > y);
-                bool hasBottom = area.Any((p) => p.x == x && p.y < y);
-                if (hasRight && hasLeft && hasTop && hasBottom)
-                {
-                    area.Add(new(x, y));
-                }
-            }
         }
     }
 }
