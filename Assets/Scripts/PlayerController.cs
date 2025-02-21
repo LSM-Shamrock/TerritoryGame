@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
-
     }
 
     private void Start()
