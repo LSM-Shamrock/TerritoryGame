@@ -41,3 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Map
+    uniqueID: 2103504239
+    locked: 0
+  - name: Trail
+    uniqueID: 4017232553
+    locked: 0
+  - name: Player
+    uniqueID: 2868473393
+    locked: 0
