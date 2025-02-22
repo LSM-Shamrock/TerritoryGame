@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     private Vector2Int inputDir = Vector2Int.right;
     private Vector2Int moveDir;
     private float remainingDist;
-    private float moveSpeed = 5f;
+    private float moveSpeed = 8f;
 
     private List<Vector2Int> trailPoints = new();
     private LineRenderer lineRenderer;
