@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     private Map map;
 
     private Vector2Int inputDir = Vector2Int.right;
-    private Vector2Int moveDir = Vector2Int.right;
+    private Vector2Int moveDir;
     private float remainingDist;
     private float moveSpeed = 5f;
 
@@ -19,6 +19,11 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
+    }
+
+    private void Start()
+    {
+        
     }
 
     private void Update()
@@ -92,14 +97,22 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+            if (trailPoints.Count >= 5)
+            {
+                var bc = trailPoints[^2] - trailPoints[^3];
+                var de = trailPoints[^4] - trailPoints[^5];
+                if (bc.magnitude < de.magnitude)
+                {
+                    trailPoints.RemoveRange(0, trailPoints.Count - 5);
+                    trailPoints[0] = trailPoints[1] + bc;
+                }
+            }
+
             if (trailPoints.Count == 5)
             {
                 var ab = trailPoints[^1] - trailPoints[^2];
-                var bc = trailPoints[^2] - trailPoints[^3];
                 var cd = trailPoints[^3] - trailPoints[^4];
-                var de = trailPoints[^4] - trailPoints[^5];
-                if (ab.magnitude > cd.magnitude ||
-                    bc.magnitude < de.magnitude)
+                if (ab.magnitude > cd.magnitude)
                 {
                     trailPoints.RemoveAt(0);
                 }
@@ -108,20 +121,20 @@ public class PlayerController : MonoBehaviour
             if (trailPoints.Count == 6)
             {
                 var ab = trailPoints[^1] - trailPoints[^2];
-                var bc = trailPoints[^2] - trailPoints[^3];
                 var cd = trailPoints[^3] - trailPoints[^4];
-                var de = trailPoints[^4] - trailPoints[^5];
                 var ef = trailPoints[^5] - trailPoints[^6];
-                if (bc.magnitude < de.magnitude)
-                {
-                    trailPoints.RemoveAt(0);
-                    trailPoints[0] = trailPoints[1] + bc;
-                }
-                else if (ab.magnitude + ef.magnitude > cd.magnitude)
+                if (ab.magnitude + ef.magnitude > cd.magnitude)
                 {
                     trailPoints.RemoveAt(0);
                 }
             }
+        }
+        
+        if (trailPoints.Count >= 5 &&
+            p == trailPoints[0]) 
+        {
+            map.Fill(trailPoints[^2], trailPoints[^4]);
+            trailPoints.Clear();
         }
     }
 
