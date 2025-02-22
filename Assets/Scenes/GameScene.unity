@@ -259,7 +259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 7033877332447305247, guid: ae692d7e8c317184ab31f448a0ba9bec, type: 3}
-  mapHalfSize: {x: 8, y: 8}
+  halfSize: {x: 8, y: 8}
 --- !u!4 &559277749
 Transform:
   m_ObjectHideFlags: 0
@@ -420,7 +420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1e4acf9a82077241be3fc3d09ed34f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapHalfSize: {x: 8, y: 8}
+  map: {fileID: 559277747}
 --- !u!50 &978606252
 Rigidbody2D:
   serializedVersion: 4
