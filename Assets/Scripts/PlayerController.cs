@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
         var inputVec = Vector2Int.zero;
         inputVec.x = (int)Input.GetAxisRaw("Horizontal");
         inputVec.y = (int)Input.GetAxisRaw("Vertical");
-        if (inputVec != Vector2Int.zero && inputVec != Vector2Int.one && 
+        if (inputVec != Vector2Int.zero && inputVec != Vector2Int.one && inputVec != -Vector2Int.one &&
             Mathf.Abs(roundPos.x + inputVec.x) <= map.halfSize.x &&
             Mathf.Abs(roundPos.y + inputVec.y) <= map.halfSize.y)
         {
