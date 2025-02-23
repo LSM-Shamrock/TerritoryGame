@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -23,7 +21,27 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        
+        var pos = Vector3.zero;
+        switch (Random.Range(0, 4))
+        {
+            case 0:
+                pos.y = map.halfSize.y;
+                pos.x = Random.Range(-map.halfSize.x, map.halfSize.x);
+                break;
+            case 1:
+                pos.y = -map.halfSize.y;
+                pos.x = Random.Range(-map.halfSize.x, map.halfSize.x);
+                break;
+            case 2:
+                pos.x = map.halfSize.x;
+                pos.y = Random.Range(-map.halfSize.y, map.halfSize.y);
+                break;
+            case 3:
+                pos.x = -map.halfSize.x;
+                pos.y = Random.Range(-map.halfSize.y, map.halfSize.y);
+                break;
+        }
+        transform.position = pos;
     }
 
     private void Update()
