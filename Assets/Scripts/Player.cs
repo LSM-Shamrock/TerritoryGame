@@ -1,17 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
-public class PlayerController : MonoBehaviour
+public class Player : MonoBehaviour
 {
     [SerializeField]
-    private Map map;
+    private CompositeCollider2D wallCollider;
+    [SerializeField]
+    private Tilemap virusAreaTilemap;
 
-    private Vector2Int inputDir = Vector2Int.right;
-    private Vector2Int moveDir;
+    private Vector3Int inputDir = Vector3Int.right;
+    private Vector3Int moveDir;
     private float remainingDist;
     private float moveSpeed = 8f;
-
-    private List<Vector2Int> trailPoints = new();
+    private List<Vector3Int> trailPoints = new();
     private LineRenderer lineRenderer;
 
     private void Awake()
@@ -21,26 +23,35 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        var minX = wallCollider.bounds.min.x + 1.5f;
+        var maxX = wallCollider.bounds.max.x - 1.5f;
+        var minY = wallCollider.bounds.min.y + 1.5f;
+        var maxY = wallCollider.bounds.max.y - 1.5f;
         var pos = Vector3.zero;
         switch (Random.Range(0, 4))
         {
             case 0:
-                pos.y = map.halfSize.y;
-                pos.x = Random.Range(-map.halfSize.x, map.halfSize.x);
+                pos.y = maxY;
+                pos.x = Random.Range(minX, maxX);
+                inputDir = Vector3Int.down;
                 break;
             case 1:
-                pos.y = -map.halfSize.y;
-                pos.x = Random.Range(-map.halfSize.x, map.halfSize.x);
+                pos.y = minY;
+                pos.x = Random.Range(minX, maxX);
+                inputDir = Vector3Int.up;
                 break;
             case 2:
-                pos.x = map.halfSize.x;
-                pos.y = Random.Range(-map.halfSize.y, map.halfSize.y);
+                pos.x = maxX;
+                pos.y = Random.Range(minY, maxY);
+                inputDir = Vector3Int.left;
                 break;
             case 3:
-                pos.x = -map.halfSize.x;
-                pos.y = Random.Range(-map.halfSize.y, map.halfSize.y);
+                pos.x = minX;
+                pos.y = Random.Range(minY, maxY);
+                inputDir = Vector3Int.right;
                 break;
         }
+        pos = Vector3Int.RoundToInt(pos);
         transform.position = pos;
     }
 
@@ -50,42 +61,46 @@ public class PlayerController : MonoBehaviour
         UpdateMove();
         UpdateTrail();
         TrailRendering();
+        FillTrail();
     }
 
     private void UpdateInput()
     {
-        var roundPos = Vector2Int.RoundToInt(transform.position);
-        var inputVec = Vector2Int.zero;
+        var inputVec = Vector3Int.zero;
         inputVec.x = (int)Input.GetAxisRaw("Horizontal");
         inputVec.y = (int)Input.GetAxisRaw("Vertical");
-        if (inputVec != Vector2Int.zero && inputVec != Vector2Int.one && inputVec != -Vector2Int.one &&
-            Mathf.Abs(roundPos.x + inputVec.x) <= map.halfSize.x &&
-            Mathf.Abs(roundPos.y + inputVec.y) <= map.halfSize.y)
+        var validDir = new HashSet<Vector3Int>() 
+        {
+            Vector3Int.right,
+            Vector3Int.left,
+            Vector3Int.up,
+            Vector3Int.down,
+        };
+        if (validDir.Contains(inputVec) &&
+            !wallCollider.OverlapPoint(transform.position + inputVec))
         {
             inputDir = inputVec;
         }
     }
-
+    
     private void UpdateMove()
     {
         if (remainingDist == 0f)
         {
             moveDir = inputDir;
-            var roundPos = Vector2Int.RoundToInt(transform.position);
-            if (Mathf.Abs(roundPos.x + moveDir.x) <= map.halfSize.x &&
-                Mathf.Abs(roundPos.y + moveDir.y) <= map.halfSize.y)
+            if (!wallCollider.OverlapPoint(transform.position + moveDir))
             {
                 remainingDist = 1f;
             }
         }
         var moveAmount = Mathf.Min(remainingDist, moveSpeed * Time.deltaTime);
-        transform.position += (Vector3)(Vector2)moveDir * moveAmount;
+        transform.position += (Vector3)moveDir * moveAmount;
         remainingDist -= moveAmount;
     }
 
     private void UpdateTrail()
     {
-        var p = Vector2Int.RoundToInt(transform.position);
+        var p = Vector3Int.RoundToInt(transform.position);
         if (!trailPoints.Contains(p))
         {
             if (trailPoints.Count == 0 || 
@@ -109,7 +124,7 @@ public class PlayerController : MonoBehaviour
             {
                 var ab = trailPoints[^1] - trailPoints[^2];
                 var cd = trailPoints[^3] - trailPoints[^4];
-                if (ab / (int)ab.magnitude == cd / (int)cd.magnitude)
+                if (ab / (int)ab.magnitude != -cd / (int)cd.magnitude)
                 {
                     trailPoints.RemoveRange(0, trailPoints.Count - 3);
                 }
@@ -147,11 +162,24 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        
-        if (trailPoints.Count >= 5 &&
-            p == trailPoints[0]) 
+    }
+
+    private void FillTrail()
+    {
+        var p = Vector3Int.RoundToInt(transform.position);
+        if (trailPoints.Count >= 5 && p == trailPoints[0]) 
         {
-            map.Fill(trailPoints[^2], trailPoints[^4]);
+            var p1 = trailPoints[^2];
+            var p2 = trailPoints[^4];
+            var min = Vector3Int.Min(p1, p2);
+            var max = Vector3Int.Max(p1, p2);
+            for (int y = min.y; y <= max.y; y++)
+            {
+                for (int x = min.x; x <= max.x; x++)
+                {
+                    virusAreaTilemap.SetTile(new(x, y), null);
+                }
+            }
             trailPoints.Clear();
         }
     }
@@ -161,7 +189,7 @@ public class PlayerController : MonoBehaviour
         lineRenderer.positionCount = trailPoints.Count;
         for (int i = 0; i < trailPoints.Count; i++)
         {
-            lineRenderer.SetPosition(i, (Vector3)(Vector2)trailPoints[i]);
+            lineRenderer.SetPosition(i, (Vector3)trailPoints[i]);
         }
     }
 }
