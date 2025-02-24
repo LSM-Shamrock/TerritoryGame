@@ -13,36 +13,7 @@ public class PlayerMoveController : MonoBehaviour
 
     private void Start()
     {
-        var minX = wallCollider.bounds.min.x + 1.5f;
-        var maxX = wallCollider.bounds.max.x - 1.5f;
-        var minY = wallCollider.bounds.min.y + 1.5f;
-        var maxY = wallCollider.bounds.max.y - 1.5f;
-        var pos = Vector3.zero;
-        switch (Random.Range(0, 4))
-        {
-            case 0:
-                pos.y = maxY;
-                pos.x = Random.Range(minX, maxX);
-                nextDir = Vector3Int.down;
-                break;
-            case 1:
-                pos.y = minY;
-                pos.x = Random.Range(minX, maxX);
-                nextDir = Vector3Int.up;
-                break;
-            case 2:
-                pos.x = maxX;
-                pos.y = Random.Range(minY, maxY);
-                nextDir = Vector3Int.left;
-                break;
-            case 3:
-                pos.x = minX;
-                pos.y = Random.Range(minY, maxY);
-                nextDir = Vector3Int.right;
-                break;
-        }
-        endPos = Vector3Int.RoundToInt(pos);
-        transform.position = endPos;
+        MoveToRandomBorderPoint();
     }
 
     private void Update()
@@ -80,5 +51,39 @@ public class PlayerMoveController : MonoBehaviour
         var moveAmount = Mathf.Min(remainingDist, moveSpeed * Time.deltaTime);
         var moveDir = (endPos - transform.position).normalized;
         transform.position += moveDir * moveAmount;
+    }
+
+    private void MoveToRandomBorderPoint()
+    {
+        var minX = wallCollider.bounds.min.x + 1.5f;
+        var maxX = wallCollider.bounds.max.x - 1.5f;
+        var minY = wallCollider.bounds.min.y + 1.5f;
+        var maxY = wallCollider.bounds.max.y - 1.5f;
+        var pos = Vector3.zero;
+        switch (Random.Range(0, 4))
+        {
+            case 0:
+                pos.y = maxY;
+                pos.x = Random.Range(minX, maxX);
+                nextDir = Vector3Int.down;
+                break;
+            case 1:
+                pos.y = minY;
+                pos.x = Random.Range(minX, maxX);
+                nextDir = Vector3Int.up;
+                break;
+            case 2:
+                pos.x = maxX;
+                pos.y = Random.Range(minY, maxY);
+                nextDir = Vector3Int.left;
+                break;
+            case 3:
+                pos.x = minX;
+                pos.y = Random.Range(minY, maxY);
+                nextDir = Vector3Int.right;
+                break;
+        }
+        endPos = Vector3Int.RoundToInt(pos);
+        transform.position = endPos;
     }
 }
