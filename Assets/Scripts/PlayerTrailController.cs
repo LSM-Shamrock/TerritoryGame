@@ -1,17 +1,12 @@
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class Player : MonoBehaviour
+public class PlayerTrailController : MonoBehaviour
 {
-    [SerializeField] private CompositeCollider2D wallCollider;
-    [SerializeField] private Tilemap virusAreaTilemap;
-
-    private float moveSpeed = 8f;
-    private Vector3Int endPos;
-    private Vector3Int nextDir = Vector3Int.right;
-
+    [SerializeField] 
+    private Tilemap virusAreaTilemap;
     private LineRenderer lineRenderer;
     private List<Vector3Int> trailPoints = new();
 
@@ -20,78 +15,11 @@ public class Player : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
     }
 
-    private void Start()
-    {
-        var minX = wallCollider.bounds.min.x + 1.5f;
-        var maxX = wallCollider.bounds.max.x - 1.5f;
-        var minY = wallCollider.bounds.min.y + 1.5f;
-        var maxY = wallCollider.bounds.max.y - 1.5f;
-        var pos = Vector3.zero;
-        switch (Random.Range(0, 4))
-        {
-            case 0:
-                pos.y = maxY;
-                pos.x = Random.Range(minX, maxX);
-                nextDir = Vector3Int.down;
-                break;
-            case 1:
-                pos.y = minY;
-                pos.x = Random.Range(minX, maxX);
-                nextDir = Vector3Int.up;
-                break;
-            case 2:
-                pos.x = maxX;
-                pos.y = Random.Range(minY, maxY);
-                nextDir = Vector3Int.left;
-                break;
-            case 3:
-                pos.x = minX;
-                pos.y = Random.Range(minY, maxY);
-                nextDir = Vector3Int.right;
-                break;
-        }
-        endPos = Vector3Int.RoundToInt(pos);
-        transform.position = endPos;
-    }
-
     private void Update()
     {
-        UpdateInput();
-        UpdateMove();
         UpdateTrail();
         TrailRendering();
         FillTrail();
-    }
-
-    private void UpdateInput()
-    {
-        var inputDir = Vector3Int.zero;
-        inputDir.x = (int)Input.GetAxisRaw("Horizontal");
-        inputDir.y = (int)Input.GetAxisRaw("Vertical");
-        var validDirSet = new HashSet<Vector3Int>() 
-        { 
-            Vector3Int.up, 
-            Vector3Int.down, 
-            Vector3Int.left, 
-            Vector3Int.right, 
-        };
-        validDirSet.RemoveWhere(dir => wallCollider.OverlapPoint((Vector3)(endPos + dir)));
-        if (validDirSet.Contains(inputDir))
-        {
-            nextDir = inputDir;
-        }
-    }
-    
-    private void UpdateMove()
-    {
-        var remainingDist = Vector3.Distance(transform.position, endPos);
-        if (remainingDist == 0 && !wallCollider.OverlapPoint((Vector2Int)(endPos + nextDir)))
-        {
-            endPos += nextDir;
-        }
-        var moveAmount = Mathf.Min(remainingDist, moveSpeed * Time.deltaTime);
-        var moveDir = (endPos - transform.position).normalized;
-        transform.position += moveDir * moveAmount;
     }
 
     private void UpdateTrail()
@@ -126,7 +54,7 @@ public class Player : MonoBehaviour
             var cd = trailPoints[^3] - trailPoints[^4];
             if (ab / (int)ab.magnitude != -cd / (int)cd.magnitude)
             {
-                trailPoints.RemoveRange(0, trailPoints.Count-3);
+                trailPoints.RemoveRange(0, trailPoints.Count - 3);
             }
         }
 
@@ -136,7 +64,7 @@ public class Player : MonoBehaviour
             var de = trailPoints[^4] - trailPoints[^5];
             if (bc.magnitude < de.magnitude)
             {
-                trailPoints.RemoveRange(0, trailPoints.Count-5);
+                trailPoints.RemoveRange(0, trailPoints.Count - 5);
                 trailPoints[0] = trailPoints[1] + bc;
             }
         }
@@ -166,7 +94,7 @@ public class Player : MonoBehaviour
     private void FillTrail()
     {
         var p = Vector3Int.RoundToInt(transform.position);
-        if (trailPoints.Count >= 5 && p == trailPoints[0]) 
+        if (trailPoints.Count >= 5 && p == trailPoints[0])
         {
             var p1 = trailPoints[^2];
             var p2 = trailPoints[^4];

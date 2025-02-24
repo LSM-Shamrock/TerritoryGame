@@ -11858,6 +11858,7 @@ GameObject:
   - component: {fileID: 978606252}
   - component: {fileID: 978606254}
   - component: {fileID: 978606255}
+  - component: {fileID: 978606256}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -12109,6 +12110,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallCollider: {fileID: 659569005}
+--- !u!114 &978606256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978606248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5576922ceed3bc448099cb64bc8ab5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   virusAreaTilemap: {fileID: 247290592}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
