@@ -26,7 +26,6 @@ public class PlayerTrailController : MonoBehaviour
     {
         var p = Vector3Int.RoundToInt(transform.position);
         trailPoints.Add(p);
-
         if (trailPoints.Count >= 2)
         {
             var ab = trailPoints[^1] - trailPoints[^2];
@@ -34,9 +33,10 @@ public class PlayerTrailController : MonoBehaviour
             {
                 var removeCount = trailPoints.Count - 1;
                 trailPoints.RemoveRange(0, removeCount);
+                Debug.Log("1");
             }
         }
-
+        // ac bc 비교 또는 a b 비교 필요 (중복 추가 방지) (ab랑 bc비교로는 a == b를 감지 안됨)
         if (trailPoints.Count >= 3)
         {
             var ab = trailPoints[^1] - trailPoints[^2];
@@ -45,9 +45,9 @@ public class PlayerTrailController : MonoBehaviour
                 ab.y == 0 && bc.y == 0)
             {
                 trailPoints.RemoveAt(trailPoints.Count - 2);
+                Debug.Log("2");
             }
         }
-
         if (trailPoints.Count >= 4)
         {
             var ab = trailPoints[^1] - trailPoints[^2];
@@ -57,7 +57,6 @@ public class PlayerTrailController : MonoBehaviour
                 trailPoints.RemoveRange(0, trailPoints.Count - 3);
             }
         }
-
         if (trailPoints.Count >= 5)
         {
             var bc = trailPoints[^2] - trailPoints[^3];
@@ -68,7 +67,6 @@ public class PlayerTrailController : MonoBehaviour
                 trailPoints[0] = trailPoints[1] + bc;
             }
         }
-
         if (trailPoints.Count == 5)
         {
             var ab = trailPoints[^1] - trailPoints[^2];
@@ -78,7 +76,6 @@ public class PlayerTrailController : MonoBehaviour
                 trailPoints.RemoveAt(0);
             }
         }
-
         if (trailPoints.Count == 6)
         {
             var ab = trailPoints[^1] - trailPoints[^2];

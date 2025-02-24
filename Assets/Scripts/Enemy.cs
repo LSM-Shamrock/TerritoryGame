@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private LayerMask virusAreaLayer;
     [SerializeField] private float moveSpeed = 5f;
     private Vector3Int endPos;
 
@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour
                 Vector3Int.left,
                 Vector3Int.right,
             };
-            validDirSet.RemoveWhere((dir) => Physics2D.OverlapPoint((Vector3)(endPos + dir), wallLayer) != null);
+            validDirSet.RemoveWhere((dir) => Physics2D.OverlapPoint((Vector3)(endPos + dir), virusAreaLayer) == null);
             if (validDirSet.Count > 0)
             {
                 var validDirArr = validDirSet.ToArray();

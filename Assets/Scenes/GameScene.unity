@@ -130,6 +130,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -3718540105859027966, guid: 1ddfb79fe9ff56c4189e1c0afb0ae05b, type: 3}
+      propertyPath: virusAreaLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 3275031842786278107, guid: 1ddfb79fe9ff56c4189e1c0afb0ae05b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.745723
@@ -193,7 +197,7 @@ GameObject:
   - component: {fileID: 247290590}
   - component: {fileID: 247290594}
   - component: {fileID: 247290593}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: VirusArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
