@@ -1,31 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField]
-    private float moveSpeed = 5f;
-    private float remainingDist;
-    private Vector3 moveDir;
+    [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private float moveSpeed = 5f;
+    private Vector3Int endPos;
+
+    private void Awake()
+    {
+        endPos = Vector3Int.RoundToInt(transform.position);
+    }
 
     private void Update()
     {
-        if (remainingDist <= 0f)
+        UpdateMove();
+    }
+
+    private void UpdateMove()
+    {
+        var remainingDist = Vector3.Distance(transform.position, endPos);
+        if (remainingDist == 0f)
         {
-            if (Random.Range(0, 100) == 0)
+            var validDirSet = new HashSet<Vector3Int>
             {
-                var angle = Random.Range(0, 4) * 90f;
-                moveDir.x = Mathf.Cos(angle * Mathf.Deg2Rad);
-                moveDir.y = Mathf.Sin(angle * Mathf.Deg2Rad);
-                remainingDist = Random.Range(1f, 3f);
+                Vector3Int.up,
+                Vector3Int.down,
+                Vector3Int.left,
+                Vector3Int.right,
+            };
+            validDirSet.RemoveWhere((dir) => Physics2D.OverlapPoint((Vector3)(endPos + dir), wallLayer) != null);
+            if (validDirSet.Count > 0)
+            {
+                var validDirArr = validDirSet.ToArray();
+                endPos += validDirArr[Random.Range(0, validDirArr.Length)];
             }
         }
-        else
-        {
-            var moveAmount = moveSpeed * Time.deltaTime;
-            transform.position += moveDir * moveAmount;
-            remainingDist -= moveAmount;
-        }
+        var moveAmount = Mathf.Min(remainingDist, moveSpeed * Time.deltaTime);
+        var moveDir = (endPos - transform.position).normalized;
+        transform.position += moveDir * moveAmount;
     }
 }
