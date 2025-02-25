@@ -3,25 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class EnemyMoveController : MonoBehaviour
 {
     [SerializeField] 
     private float moveSpeed = 5f;
     private Vector3Int endPos;
 
-    private void Awake()
-    {
-        endPos = Vector3Int.RoundToInt(transform.position);
-    }
-
     private void Update()
     {
         UpdateMove();
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-
     }
 
     private void UpdateMove()

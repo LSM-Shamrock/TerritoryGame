@@ -9,19 +9,6 @@ public class PlayerTrailController : MonoBehaviour
     private EdgeCollider2D edgeCollider;
     private List<Vector3Int> trailPoints = new();
 
-    private void Awake()
-    {
-        lineRenderer = GetComponent<LineRenderer>();
-        edgeCollider = GetComponent<EdgeCollider2D>();
-    }
-
-    private void Update()
-    {
-        UpdateTrail();
-        TrailRendering();
-        UpdateCollider();
-    }
-
     private void UpdateTrail()
     {
         var playerPos = GameManager.instance.player.transform.position;
@@ -119,5 +106,18 @@ public class PlayerTrailController : MonoBehaviour
             vec2List.Add((Vector2Int)p);
         }
         edgeCollider.SetPoints(vec2List);
+    }
+
+    private void Awake()
+    {
+        lineRenderer = GetComponent<LineRenderer>();
+        edgeCollider = GetComponent<EdgeCollider2D>();
+    }
+
+    private void Update()
+    {
+        UpdateTrail();
+        TrailRendering();
+        UpdateCollider();
     }
 }
