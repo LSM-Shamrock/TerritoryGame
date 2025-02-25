@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField]
-    private Transform followTarget; 
     private Vector3 offset = Vector3.back * 10f; 
     private float moveSpeed = 10f;
 
     public void Update()
     {
+        var followTarget = GameManager.instance.player.transform;
         if (followTarget != null)
         {
             transform.position = Vector3.Lerp(transform.position, followTarget.position + offset, Time.deltaTime * moveSpeed);

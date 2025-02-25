@@ -134,6 +134,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 8

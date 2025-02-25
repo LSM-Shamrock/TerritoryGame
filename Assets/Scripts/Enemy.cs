@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private LayerMask virusAreaLayer;
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] 
+    private float moveSpeed = 5f;
     private Vector3Int endPos;
 
     private void Awake()
@@ -19,11 +19,21 @@ public class Enemy : MonoBehaviour
         UpdateMove();
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
+    }
+
     private void UpdateMove()
     {
         var remainingDist = Vector3.Distance(transform.position, endPos);
-        if (remainingDist == 0f)
+        if (remainingDist > 1f)
         {
+            endPos = Vector3Int.RoundToInt(transform.position);
+        }
+        if (remainingDist <= 0)
+        {
+            transform.position = endPos;
             var validDirSet = new HashSet<Vector3Int>
             {
                 Vector3Int.up,
@@ -31,7 +41,8 @@ public class Enemy : MonoBehaviour
                 Vector3Int.left,
                 Vector3Int.right,
             };
-            validDirSet.RemoveWhere((dir) => Physics2D.OverlapPoint((Vector3)(endPos + dir), virusAreaLayer) == null);
+            var virusAreaTilemap = GameManager.instance.virusAreaTilemap;
+            validDirSet.RemoveWhere((dir) => !virusAreaTilemap.HasTile(endPos + dir));
             if (validDirSet.Count > 0)
             {
                 var validDirArr = validDirSet.ToArray();
