@@ -17,16 +17,7 @@ public class PlayerTrailController : MonoBehaviour
         {
             var p1 = trailPoints[^2];
             var p2 = trailPoints[^4];
-            var min = Vector3Int.Min(p1, p2);
-            var max = Vector3Int.Max(p1, p2);
-            var virusAreaTilemap = GameManager.instance.virusAreaTilemap;
-            for (int y = min.y; y <= max.y; y++)
-            {
-                for (int x = min.x; x <= max.x; x++)
-                {
-                    virusAreaTilemap.SetTile(new(x, y), null);
-                }
-            }
+            GameManager.instance.ChangeToPlayerArea(p1, p2);
             trailPoints.Clear();
         }
         else
@@ -119,5 +110,14 @@ public class PlayerTrailController : MonoBehaviour
         UpdateTrail();
         TrailRendering();
         UpdateCollider();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        var enemyTag = GameManager.instance.enemyPrefab.tag;
+        if (collision.CompareTag(enemyTag))
+        {
+            GameManager.instance.playerLife -= 1;
+        }
     }
 }

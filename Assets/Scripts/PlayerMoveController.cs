@@ -5,7 +5,7 @@ public class PlayerMoveController : MonoBehaviour
 {
     private float moveSpeed = 8f;
     private Vector3Int endPos;
-    private Vector3Int nextDir = Vector3Int.right;
+    private Vector3Int nextDir;
 
     private void Start()
     {
@@ -30,8 +30,8 @@ public class PlayerMoveController : MonoBehaviour
             Vector3Int.left, 
             Vector3Int.right, 
         };
-        var wallTilemap = GameManager.instance.wallTilemap;
-        validDirSet.RemoveWhere(dir => wallTilemap.HasTile(endPos + dir));
+        var bounds = GameManager.instance.mapBounds;
+        validDirSet.RemoveWhere(dir => !bounds.Contains(endPos + dir));
         if (validDirSet.Contains(inputDir))
         {
             nextDir = inputDir;
@@ -41,15 +41,15 @@ public class PlayerMoveController : MonoBehaviour
     private void UpdateMove()
     {
         var remainingDist = Vector3.Distance(transform.position, endPos);
-        if (remainingDist > 1f)
-        {
-            endPos = Vector3Int.RoundToInt(transform.position);
-        }
+        //if (remainingDist > 1f)
+        //{
+        //    endPos = Vector3Int.RoundToInt(transform.position);
+        //}
         if (remainingDist < 0.001f)
         {
             transform.position = endPos;
-            var wallTilemap = GameManager.instance.wallTilemap;
-            if (!wallTilemap.HasTile(endPos + nextDir))
+            var bounds = GameManager.instance.mapBounds;
+            if (bounds.Contains(endPos + nextDir))
             {
                 endPos += nextDir;
             }
@@ -61,11 +61,11 @@ public class PlayerMoveController : MonoBehaviour
 
     private void MoveToRandomBorderPoint()
     {
-        var wallTilemap = GameManager.instance.wallTilemap;
-        var minX = wallTilemap.cellBounds.min.x + 1.5f;
-        var maxX = wallTilemap.cellBounds.max.x - 1.5f;
-        var minY = wallTilemap.cellBounds.min.y + 1.5f;
-        var maxY = wallTilemap.cellBounds.max.y - 1.5f;
+        var gameArea = GameManager.instance.mapBounds;
+        var minX = gameArea.min.x + 0.5f;
+        var maxX = gameArea.max.x - 0.5f;
+        var minY = gameArea.min.y + 0.5f;
+        var maxY = gameArea.max.y - 0.5f;
         var pos = Vector3.zero;
         switch (Random.Range(0, 4))
         {
