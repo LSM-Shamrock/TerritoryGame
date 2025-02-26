@@ -61,32 +61,33 @@ public class PlayerMoveController : MonoBehaviour
 
     private void MoveToRandomBorderPoint()
     {
-        var gameArea = GameManager.instance.mapBounds;
-        var minX = gameArea.min.x + 0.5f;
-        var maxX = gameArea.max.x - 0.5f;
-        var minY = gameArea.min.y + 0.5f;
-        var maxY = gameArea.max.y - 0.5f;
+        var bounds = GameManager.instance.mapBounds;
+        bounds.size -= Vector3Int.one;
+        var minX = bounds.min.x;
+        var maxX = bounds.max.x;
+        var minY = bounds.min.y;
+        var maxY = bounds.max.y;
         var pos = Vector3.zero;
         switch (Random.Range(0, 4))
         {
             case 0:
                 pos.y = maxY;
-                pos.x = Random.Range(minX, maxX);
+                pos.x = Random.Range(minX, maxX + 1);
                 nextDir = Vector3Int.down;
                 break;
             case 1:
                 pos.y = minY;
-                pos.x = Random.Range(minX, maxX);
+                pos.x = Random.Range(minX, maxX + 1);
                 nextDir = Vector3Int.up;
                 break;
             case 2:
                 pos.x = maxX;
-                pos.y = Random.Range(minY, maxY);
+                pos.y = Random.Range(minY, maxY + 1);
                 nextDir = Vector3Int.left;
                 break;
             case 3:
                 pos.x = minX;
-                pos.y = Random.Range(minY, maxY);
+                pos.y = Random.Range(minY, maxY + 1);
                 nextDir = Vector3Int.right;
                 break;
         }

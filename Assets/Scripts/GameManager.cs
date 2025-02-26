@@ -20,14 +20,12 @@ public class GameManager : MonoBehaviour
     public int playerLife = 5;
     public int enemyKillCount = 0;
 
-    public Bounds mapBounds;
+    public BoundsInt mapBounds;
 
     private void Awake()
     {
         instance = this;
-        var center = virusAreaTilemap.cellBounds.center;
-        var size = virusAreaTilemap.size;
-        mapBounds = new(center, size);
+        mapBounds = virusAreaTilemap.cellBounds;
     }
 
     public void ChangeToPlayerArea(Vector3Int p1, Vector3Int p2)
