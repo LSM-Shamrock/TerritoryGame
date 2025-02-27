@@ -39,15 +39,6 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: PlayerArea
-    uniqueID: 456743455
-    locked: 0
-  - name: VirusArea
-    uniqueID: 2835577639
-    locked: 0
-  - name: Wall
-    uniqueID: 4242869455
-    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

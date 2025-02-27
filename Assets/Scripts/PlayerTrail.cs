@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class PlayerTrailController : MonoBehaviour
+public class PlayerTrail : MonoBehaviour
 {
     private LineRenderer lineRenderer;
     private EdgeCollider2D edgeCollider;
     private List<Vector3Int> trailPoints = new();
 
-    private void UpdateTrail()
+    private void UpdatePoints()
     {
-        var playerPos = GameManager.instance.player.transform.position;
+        var playerPos = FindObjectOfType<Player>().transform.position;
         var p = Vector3Int.RoundToInt(playerPos);
         if (trailPoints.Count >= 5 && p == trailPoints[0])
         {
             var p1 = trailPoints[^2];
             var p2 = trailPoints[^4];
-            GameManager.instance.ChangeToPlayerArea(p1, p2);
+            var map = FindObjectOfType<Map>();
+            map.FillPlayerArea(p1, p2);
             trailPoints.Clear();
         }
         else
@@ -107,17 +108,18 @@ public class PlayerTrailController : MonoBehaviour
 
     private void Update()
     {
-        UpdateTrail();
+        UpdatePoints();
         TrailRendering();
         UpdateCollider();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        var enemyTag = GameManager.instance.enemyPrefab.tag;
-        if (collision.CompareTag(enemyTag))
+        var enemy = collision.GetComponent<Enemy>();
+        if (enemy != null)
         {
-            GameManager.instance.playerLife -= 1;
+            var player = FindObjectOfType<Player>();
+            player.LoseLife();
         }
     }
 }
