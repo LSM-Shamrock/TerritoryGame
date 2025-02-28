@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -8,6 +9,15 @@ public class Player : MonoBehaviour
     private Vector3Int nextDir;
 
     public int LifeCount { get; private set; } = 5;
+
+    public HashSet<Vector3Int> MoveableArea
+    {
+        get
+        {
+            var map = FindObjectOfType<Map>();
+            return map.MapArea;
+        }
+    }
 
     private void Start()
     {
@@ -65,18 +75,7 @@ public class Player : MonoBehaviour
         var inputDir = Vector3Int.zero;
         inputDir.x = (int)Input.GetAxisRaw("Horizontal");
         inputDir.y = (int)Input.GetAxisRaw("Vertical");
-
-        var validDirSet = new HashSet<Vector3Int>() 
-        { 
-            Vector3Int.up, 
-            Vector3Int.down, 
-            Vector3Int.left, 
-            Vector3Int.right, 
-        };
-        var map = FindObjectOfType<Map>();
-        validDirSet.RemoveWhere(dir => !map.MapArea.Contains(endPos + dir));
-
-        if (validDirSet.Contains(inputDir))
+        if (MoveableArea.Contains(endPos + inputDir))
         {
             nextDir = inputDir;
         }
@@ -89,8 +88,7 @@ public class Player : MonoBehaviour
         if (remainingDist <= moveAmount)
         {
             transform.position = endPos;
-            var map = FindObjectOfType<Map>();
-            if (map.MapArea.Contains(endPos + nextDir))
+            if (MoveableArea.Contains(endPos + nextDir))
             {
                 endPos += nextDir;
             }

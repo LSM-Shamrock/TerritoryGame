@@ -9,6 +9,17 @@ public class Enemy : MonoBehaviour
     private Vector3Int endPos;
     private Vector3Int nextDir;
 
+    public Vector3Int RoundPos => Vector3Int.RoundToInt(transform.position);
+
+    public HashSet<Vector3Int> MoveableArea
+    {
+        get 
+        {
+            var map = FindObjectOfType<Map>();
+            return map.VirusArea; ;
+        }
+    }
+
     private void Update()
     {
         var map = FindObjectOfType<Map>();
@@ -20,12 +31,17 @@ public class Enemy : MonoBehaviour
         UpdateMove();
     }
 
+    private void Start()
+    {
+        
+    }
+
     private void Dead()
     {
         Destroy(gameObject);
     }
 
-    private void SetRandomNextDir()
+    private bool SetRandomNextDir()
     {
         var dirSet = new HashSet<Vector3Int>
         {
@@ -34,13 +50,17 @@ public class Enemy : MonoBehaviour
             Vector3Int.left,
             Vector3Int.right,
         };
-        var map = FindObjectOfType<Map>();
-        dirSet.RemoveWhere((dir) => !map.VirusArea.Contains(endPos + dir));
+        dirSet.RemoveWhere(dir => !MoveableArea.Contains(endPos + dir));
         if (dirSet.Count > 0)
         {
             var dirArr = dirSet.ToArray();
             var randIdex = Random.Range(0, dirArr.Length);
             nextDir = dirArr[randIdex];
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -52,8 +72,7 @@ public class Enemy : MonoBehaviour
         {
             transform.position = endPos;
             SetRandomNextDir();
-            var map = FindObjectOfType<Map>();
-            if (map.MapArea.Contains(endPos + nextDir))
+            if (MoveableArea.Contains(endPos + nextDir))
             {
                 endPos += nextDir;
             }
