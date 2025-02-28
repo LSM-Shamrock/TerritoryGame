@@ -5,12 +5,9 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private Mover mover;
-
-    private void Awake()
-    {
-        mover = GetComponent<Mover>();
-    }
+    public float moveSpeed = 8f;
+    private Vector3Int endPos;
+    private Vector3Int nextDir;
 
     private void Update()
     {
@@ -20,40 +17,51 @@ public class Enemy : MonoBehaviour
         {
             Dead();
         }
-
         UpdateMove();
-    }
-
-    private void UpdateMove()
-    {
-        if (mover.RemainingDist > 1f)
-        {
-            var roundPos = Vector3Int.RoundToInt(transform.position);
-            mover.endPos = roundPos;
-        }
-        if (mover.RemainingDist <= 0f)
-        {
-            transform.position = mover.endPos;
-            var validDirSet = new HashSet<Vector3Int>
-            {
-                Vector3Int.up,
-                Vector3Int.down,
-                Vector3Int.left,
-                Vector3Int.right,
-            };
-            var map = FindObjectOfType<Map>();
-            validDirSet.RemoveWhere((dir) => !map.VirusArea.Contains(mover.endPos + dir));
-            if (validDirSet.Count > 0)
-            {
-                var validDirArr = validDirSet.ToArray();
-                mover.endPos += validDirArr[Random.Range(0, validDirArr.Length)];
-            }
-        }
-        mover.Move();
     }
 
     private void Dead()
     {
         Destroy(gameObject);
+    }
+
+    private void SetRandomNextDir()
+    {
+        var dirSet = new HashSet<Vector3Int>
+        {
+            Vector3Int.up,
+            Vector3Int.down,
+            Vector3Int.left,
+            Vector3Int.right,
+        };
+        var map = FindObjectOfType<Map>();
+        dirSet.RemoveWhere((dir) => !map.VirusArea.Contains(endPos + dir));
+        if (dirSet.Count > 0)
+        {
+            var dirArr = dirSet.ToArray();
+            var randIdex = Random.Range(0, dirArr.Length);
+            nextDir = dirArr[randIdex];
+        }
+    }
+
+    private void UpdateMove()
+    {
+        var remainingDist = Vector3.Distance(transform.position, endPos);
+        var moveAmount = moveSpeed * Time.deltaTime;
+        if (remainingDist <= moveAmount)
+        {
+            transform.position = endPos;
+            SetRandomNextDir();
+            var map = FindObjectOfType<Map>();
+            if (map.MapArea.Contains(endPos + nextDir))
+            {
+                endPos += nextDir;
+            }
+        }
+        else
+        {
+            var moveDir = (endPos - transform.position).normalized;
+            transform.position += moveDir * moveAmount;
+        }
     }
 }

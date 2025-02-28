@@ -3,15 +3,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private Mover mover;
+    public float moveSpeed = 8f;
+    private Vector3Int endPos;
     private Vector3Int nextDir;
 
     public int LifeCount { get; private set; } = 5;
-
-    private void Awake()
-    {
-        mover = GetComponent<Mover>();
-    }
 
     private void Start()
     {
@@ -24,6 +20,11 @@ public class Player : MonoBehaviour
         UpdateMove();
     }
 
+    public void LoseLife()
+    {
+        LifeCount--;
+    }
+
     private void MoveToRandomBorderPos()
     {
         var map = FindObjectOfType<Map>();
@@ -31,7 +32,7 @@ public class Player : MonoBehaviour
         var maxX = map.Max.x;
         var minY = map.Min.y;
         var maxY = map.Max.y;
-        var pos = Vector3.zero;
+        var pos = Vector3Int.zero;
         switch (Random.Range(0, 4))
         {
             case 0:
@@ -55,9 +56,8 @@ public class Player : MonoBehaviour
                 nextDir = Vector3Int.right;
                 break;
         }
-        var roundPos = Vector3Int.RoundToInt(pos);
-        mover.endPos = roundPos;
-        transform.position = roundPos;
+        endPos = pos;
+        transform.position = pos;
     }
 
     private void UpdateInput()
@@ -65,6 +65,7 @@ public class Player : MonoBehaviour
         var inputDir = Vector3Int.zero;
         inputDir.x = (int)Input.GetAxisRaw("Horizontal");
         inputDir.y = (int)Input.GetAxisRaw("Vertical");
+
         var validDirSet = new HashSet<Vector3Int>() 
         { 
             Vector3Int.up, 
@@ -73,7 +74,8 @@ public class Player : MonoBehaviour
             Vector3Int.right, 
         };
         var map = FindObjectOfType<Map>();
-        validDirSet.RemoveWhere(dir => !map.MapArea.Contains(mover.endPos + dir));
+        validDirSet.RemoveWhere(dir => !map.MapArea.Contains(endPos + dir));
+
         if (validDirSet.Contains(inputDir))
         {
             nextDir = inputDir;
@@ -82,20 +84,21 @@ public class Player : MonoBehaviour
     
     private void UpdateMove()
     {
-        if (mover.RemainingDist > 1f)
+        var remainingDist = Vector3.Distance(transform.position, endPos);
+        var moveAmount = moveSpeed * Time.deltaTime;
+        if (remainingDist <= moveAmount)
         {
-            var roundPos = Vector3Int.RoundToInt(transform.position);
-            mover.endPos = roundPos;
+            transform.position = endPos;
+            var map = FindObjectOfType<Map>();
+            if (map.MapArea.Contains(endPos + nextDir))
+            {
+                endPos += nextDir;
+            }
         }
-        if (mover.RemainingDist <= 0f)
+        else
         {
-            mover.endPos += nextDir;
+            var moveDir = (endPos - transform.position).normalized;
+            transform.position += moveDir * moveAmount;
         }
-        mover.Move();
-    }
-
-    public void LoseLife()
-    {
-        LifeCount--;
     }
 }
