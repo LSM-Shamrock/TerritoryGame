@@ -11,20 +11,21 @@ public class Map : MonoBehaviour
     [SerializeField] TileBase playerTile;
     [SerializeField] TileBase virusTile;
     [SerializeField] TileBase wallTile;
-    Tilemap tilemap;
+    [SerializeField] Tilemap playerTilemap;
+    [SerializeField] Tilemap virusTilemap;
+    [SerializeField] Tilemap wallTilemap;
 
     public Vector3Int Min => Vector3Int.Min(pos1, pos2);
     public Vector3Int Max => Vector3Int.Max(pos1, pos2);
 
     public HashSet<Vector3Int> MapArea { get; private set; } = new();
 
-    public HashSet<Vector3Int> PlayerArea => new(MapArea.Where((p) => tilemap.GetTile(p) == playerTile));
+    public HashSet<Vector3Int> PlayerArea => new(MapArea.Where((p) => playerTilemap.HasTile(p)));
 
-    public HashSet<Vector3Int> VirusArea => new(MapArea.Where((p) => tilemap.GetTile(p) == virusTile));
+    public HashSet<Vector3Int> VirusArea => new(MapArea.Where((p) => virusTilemap.HasTile(p)));
 
     private void Awake()
     {
-        tilemap = GetComponentInChildren<Tilemap>();
         SetupTiles();
     }
 
@@ -38,11 +39,11 @@ public class Map : MonoBehaviour
                 if (Min.x <= x && x <= Max.x && Min.y <= y && y <= Max.y)
                 {
                     MapArea.Add(p);
-                    tilemap.SetTile(p, virusTile);
+                    virusTilemap.SetTile(p, virusTile);
                 }
                 else
                 {
-                    tilemap.SetTile(p, wallTile);
+                    wallTilemap.SetTile(p, wallTile);
                 }
             }       
         }
@@ -59,7 +60,8 @@ public class Map : MonoBehaviour
                 var p = new Vector3Int(x, y);
                 if (MapArea.Contains(p))
                 {
-                    tilemap.SetTile(p, playerTile);
+                    virusTilemap.SetTile(p, null);
+                    playerTilemap.SetTile(p, playerTile);
                 }
             }
         }

@@ -7,9 +7,9 @@ public class Virus : MonoBehaviour
 {
     public float moveSpeed = 8f;
 
-    public Vector3Int RoundPos => Vector3Int.RoundToInt(transform.position);
+    virtual public Vector3Int RoundPos => Vector3Int.RoundToInt(transform.position);
 
-    public HashSet<Vector3Int> MoveableArea
+    virtual public HashSet<Vector3Int> VirusArea
     {
         get 
         {
@@ -18,26 +18,26 @@ public class Virus : MonoBehaviour
         }
     }
 
-    private void Start()
+    virtual protected void Start()
     {
         StartCoroutine(RepeatMovement());
     }
 
-    private void Update()
+    virtual protected void Update()
     {
         var p = Vector3Int.RoundToInt(transform.position);
-        if (!MoveableArea.Contains(p))
+        if (!VirusArea.Contains(p))
         {
             Dead();
         }
     }
 
-    public void Dead()
+    virtual public void Dead()
     {
         Destroy(gameObject);
     }
 
-    public HashSet<Vector3Int> GetMoveableDir(Vector3Int p)
+    virtual public HashSet<Vector3Int> GetMoveableDir(Vector3Int p)
     {
         var result = new HashSet<Vector3Int>
         {
@@ -46,11 +46,11 @@ public class Virus : MonoBehaviour
             Vector3Int.left,
             Vector3Int.right,
         };
-        result.RemoveWhere(dir => !MoveableArea.Contains(p + dir));
+        result.RemoveWhere(dir => !VirusArea.Contains(p + dir));
         return result;
     }
 
-    private IEnumerator Move(Vector3Int endPos)
+    virtual protected IEnumerator Move(Vector3Int endPos)
     {
         var moveDir = (endPos - transform.position).normalized;
         var remainingDist = Vector3.Distance(transform.position, endPos);
@@ -64,7 +64,7 @@ public class Virus : MonoBehaviour
         transform.position = endPos;
     }
 
-    private IEnumerator RepeatMovement()
+    virtual protected IEnumerator RepeatMovement()
     {
         while (true)
         {
@@ -78,7 +78,7 @@ public class Virus : MonoBehaviour
             for (int i = 1; i <= moveDist; i++)
             {
                 var movePos = RoundPos + moveDir * i;
-                if (!MoveableArea.Contains(movePos))
+                if (!VirusArea.Contains(movePos))
                 {
                     break;
                 }
