@@ -9,27 +9,30 @@ public class PlayerTrail : MonoBehaviour
     private EdgeCollider2D edgeCollider;
     private List<Vector3Int> trailPoints = new();
 
-    private void UpdatePoints()
+    private void UpdatePoint()
     {
-        var playerPos = FindObjectOfType<Player>().transform.position;
-        var p = Vector3Int.RoundToInt(playerPos);
-        if (trailPoints.Count >= 5 && p == trailPoints[0])
+        var player = FindObjectOfType<Player>();
+        var p = Vector3Int.RoundToInt(player.transform.position);
+        if (trailPoints.Contains(p))
         {
-            var p1 = trailPoints[^2];
-            var p2 = trailPoints[^4];
-            var map = FindObjectOfType<Map>();
-            map.FillPlayerArea(p1, p2);
-            trailPoints.Clear();
-        }
-        else
-        {
-            if (trailPoints.Contains(p))
+            if (trailPoints.Count >= 4 && p == trailPoints[0])
+            {
+                var p1 = trailPoints[1];
+                var p2 = trailPoints[3];
+                var map = FindObjectOfType<Map>();
+                map.FillPlayerArea(p1, p2);
+                trailPoints.Clear();
+            }
+            else
             {
                 var pIndex = trailPoints.IndexOf(p);
                 var removeIndex = pIndex + 1;
                 var removeCount = trailPoints.Count - removeIndex;
                 trailPoints.RemoveRange(removeIndex, removeCount);
             }
+        }
+        else
+        {
             trailPoints.Add(p);
             if (trailPoints.Count >= 2)
             {
@@ -81,7 +84,7 @@ public class PlayerTrail : MonoBehaviour
         }
     }
 
-    private void TrailRendering()
+    private void UpdateRenderer()
     {
         lineRenderer.positionCount = trailPoints.Count;
         for (int i = 0; i < trailPoints.Count; i++)
@@ -108,8 +111,8 @@ public class PlayerTrail : MonoBehaviour
 
     private void Update()
     {
-        UpdatePoints();
-        TrailRendering();
+        UpdatePoint();
+        UpdateRenderer();
         UpdateCollider();
     }
 

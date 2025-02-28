@@ -70,14 +70,29 @@ public class Player : MonoBehaviour
         transform.position = pos;
     }
 
+    public HashSet<Vector3Int> GetMoveableDir(Vector3Int p)
+    {
+        var result = new HashSet<Vector3Int>
+        {
+            Vector3Int.up,
+            Vector3Int.down,
+            Vector3Int.left,
+            Vector3Int.right,
+        };
+        result.RemoveWhere(dir => !MoveableArea.Contains(p + dir));
+        return result;
+    }
+
     private void UpdateInput()
     {
-        var inputDir = Vector3Int.zero;
-        inputDir.x = (int)Input.GetAxisRaw("Horizontal");
-        inputDir.y = (int)Input.GetAxisRaw("Vertical");
-        if (MoveableArea.Contains(endPos + inputDir))
+        var input = Vector3Int.zero;
+        input.x = (int)Input.GetAxisRaw("Horizontal");
+        input.y = (int)Input.GetAxisRaw("Vertical");
+
+        var validDir = GetMoveableDir(endPos);
+        if (validDir.Contains(input))
         {
-            nextDir = inputDir;
+            nextDir = input;
         }
     }
     
