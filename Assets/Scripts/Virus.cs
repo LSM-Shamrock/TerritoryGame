@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Virus : MonoBehaviour
 {
     public float moveSpeed = 8f;
 
@@ -32,7 +32,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void Dead()
+    public void Dead()
     {
         Destroy(gameObject);
     }

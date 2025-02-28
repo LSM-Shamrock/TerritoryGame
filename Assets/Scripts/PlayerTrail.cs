@@ -118,7 +118,7 @@ public class PlayerTrail : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        var enemy = collision.GetComponent<Enemy>();
+        var enemy = collision.GetComponent<Virus>();
         if (enemy != null)
         {
             var player = FindObjectOfType<Player>();
