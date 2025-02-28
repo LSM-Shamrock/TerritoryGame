@@ -6,8 +6,6 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public float moveSpeed = 8f;
-    private Vector3Int endPos;
-    private Vector3Int nextDir;
 
     public Vector3Int RoundPos => Vector3Int.RoundToInt(transform.position);
 
@@ -20,20 +18,18 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        StartCoroutine(RepeatMovement());
+    }
+
     private void Update()
     {
-        var map = FindObjectOfType<Map>();
         var p = Vector3Int.RoundToInt(transform.position);
-        if (!map.VirusArea.Contains(p))
+        if (!MoveableArea.Contains(p))
         {
             Dead();
         }
-        UpdateMove();
-    }
-
-    private void Start()
-    {
-        
     }
 
     private void Dead()
@@ -41,46 +37,55 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private bool SetRandomNextDir()
+    public HashSet<Vector3Int> GetMoveableDir(Vector3Int p)
     {
-        var dirSet = new HashSet<Vector3Int>
+        var result = new HashSet<Vector3Int>
         {
             Vector3Int.up,
             Vector3Int.down,
             Vector3Int.left,
             Vector3Int.right,
         };
-        dirSet.RemoveWhere(dir => !MoveableArea.Contains(endPos + dir));
-        if (dirSet.Count > 0)
-        {
-            var dirArr = dirSet.ToArray();
-            var randIdex = Random.Range(0, dirArr.Length);
-            nextDir = dirArr[randIdex];
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        result.RemoveWhere(dir => !MoveableArea.Contains(p + dir));
+        return result;
     }
 
-    private void UpdateMove()
+    private IEnumerator Move(Vector3Int endPos)
     {
+        var moveDir = (endPos - transform.position).normalized;
         var remainingDist = Vector3.Distance(transform.position, endPos);
-        var moveAmount = moveSpeed * Time.deltaTime;
-        if (remainingDist <= moveAmount)
+        while (remainingDist > 0)
         {
-            transform.position = endPos;
-            SetRandomNextDir();
-            if (MoveableArea.Contains(endPos + nextDir))
-            {
-                endPos += nextDir;
-            }
-        }
-        else
-        {
-            var moveDir = (endPos - transform.position).normalized;
+            var moveAmount = moveSpeed * Time.deltaTime;
             transform.position += moveDir * moveAmount;
+            remainingDist -= moveAmount;
+            yield return null;
+        }
+        transform.position = endPos;
+    }
+
+    private IEnumerator RepeatMovement()
+    {
+        while (true)
+        {
+            var moveableDir = GetMoveableDir(RoundPos).ToArray();
+            if (moveableDir.Length == 0)
+            {
+                continue;
+            }
+            var moveDir = moveableDir[Random.Range(0, moveableDir.Length)];
+            var moveDist = Random.Range(1, 4);
+            for (int i = 1; i <= moveDist; i++)
+            {
+                var movePos = RoundPos + moveDir * i;
+                if (!MoveableArea.Contains(movePos))
+                {
+                    break;
+                }
+                yield return Move(movePos);
+            }
+            var waitTime = Random.Range(0f, 1f);
+            yield return new WaitForSeconds(waitTime);
         }
     }
 }
