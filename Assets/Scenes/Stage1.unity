@@ -122,50 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &287200894
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 287200895}
-  - component: {fileID: 287200896}
-  m_Layer: 0
-  m_Name: ItemSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &287200895
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 287200894}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.0954802, y: 2.5267837, z: 3.4348278}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &287200896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 287200894}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f819845591a9b1a44a5bbb017791cf2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1471091064
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -302,6 +258,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameUI
       objectReference: {fileID: 0}
+    - target: {fileID: 1605411506781281359, guid: d68f79cd6200a714db431d5ddc5a3008, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605411506781281359, guid: d68f79cd6200a714db431d5ddc5a3008, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605411506781281359, guid: d68f79cd6200a714db431d5ddc5a3008, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605411506781281359, guid: d68f79cd6200a714db431d5ddc5a3008, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605411506781281359, guid: d68f79cd6200a714db431d5ddc5a3008, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605411506781281359, guid: d68f79cd6200a714db431d5ddc5a3008, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5190107929510523770, guid: d68f79cd6200a714db431d5ddc5a3008, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -348,6 +328,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6795915488999743482, guid: d68f79cd6200a714db431d5ddc5a3008, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9012363576752109050, guid: d68f79cd6200a714db431d5ddc5a3008, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9012363576752109050, guid: d68f79cd6200a714db431d5ddc5a3008, type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1175,6 +1163,16 @@ MonoBehaviour:
   playerTilemap: {fileID: 3560004127979714297}
   virusTilemap: {fileID: 5396377207245304506}
   wallTilemap: {fileID: 1899162287152988075}
+  tem1Cnt: 3
+  tem2Cnt: 3
+  tem3Cnt: 1
+  tem4Cnt: 2
+  tem5Cnt: 5
+  tem1Prefab: {fileID: 206427977935188595, guid: f2e1f152077dae94d86d30a42b71c010, type: 3}
+  tem2Prefab: {fileID: 7215143062155729978, guid: fa7b0bdc71b4ad444b0faca60994f600, type: 3}
+  tem3Prefab: {fileID: 1307608374162865557, guid: d2b546f1f9aba7f4ca21eedfa8f67705, type: 3}
+  tem4Prefab: {fileID: 2425910021427132797, guid: 2f383479276f807499f90426b47a4895, type: 3}
+  tem5Prefab: {fileID: 4130622859228119570, guid: bc2011d9eee91034299bcf205d7c907f, type: 3}
 --- !u!81 &8109042342162599195
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1481,4 +1479,3 @@ SceneRoots:
   - {fileID: 3332201926316093784}
   - {fileID: 3275031842403577897}
   - {fileID: 1471091064}
-  - {fileID: 287200895}

@@ -123,7 +123,7 @@ public class PlayerTrail : MonoBehaviour
         {
             trailPoints.Clear();
             var player = FindObjectOfType<PlayerUnit>();
-            player.LoseLife();
+            player.LifeDown();
         }
     }
 }

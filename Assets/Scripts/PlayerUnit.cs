@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class PlayerUnit : MonoBehaviour
 {
-    public float moveSpeed = 8f;
+    public float moveSpeed = 10f;
     private Vector3Int endPos;
     private Vector3Int nextDir;
 
-    public int LifeCount { get; private set; } = 5;
 
     public HashSet<Vector3Int> MoveableArea
     {
@@ -28,11 +27,7 @@ public class PlayerUnit : MonoBehaviour
     {
         UpdateInput();
         UpdateMove();
-    }
-
-    public void LoseLife()
-    {
-        LifeCount--;
+        UpdateItemTime();
     }
 
     private void MoveToRandomBorderPos()
@@ -82,7 +77,6 @@ public class PlayerUnit : MonoBehaviour
         result.RemoveWhere(dir => !MoveableArea.Contains(p + dir));
         return result;
     }
-
     private void UpdateInput()
     {
         var input = Vector3Int.zero;
@@ -95,11 +89,10 @@ public class PlayerUnit : MonoBehaviour
             nextDir = input;
         }
     }
-    
     private void UpdateMove()
     {
         var remainingDist = Vector3.Distance(transform.position, endPos);
-        var moveAmount = moveSpeed * Time.deltaTime;
+        var moveAmount = moveSpeed * SpeedBoost * Time.deltaTime;
         if (remainingDist <= moveAmount)
         {
             transform.position = endPos;
@@ -113,6 +106,73 @@ public class PlayerUnit : MonoBehaviour
         {
             var moveDir = (endPos - transform.position).normalized;
             transform.position += moveDir * moveAmount;
+        }
+    }
+
+
+    public int Score { get; private set; }
+
+    public int MaxLife { get; private set; } = 5;
+    public int LifeCount { get; private set; } = 5;
+    public void LifeDown()
+    {
+        if (!IsInvincibility)
+        {
+            if (IsDefense)
+            {
+                ItemTime = 0f;
+            }
+            else
+            {
+                LifeCount--;
+            }
+        }
+    }
+    public void LifeUp()
+    {
+        if (LifeCount < MaxLife)
+        {
+            LifeCount++;
+        }
+    }
+
+    public ItemType Item { get; private set; }
+    public float ItemTime { get; private set; } = 0f;
+    public bool IsDefense => Item == ItemType.Defense && ItemTime > 0f;
+    public bool IsInvincibility => Item == ItemType.Invincibility && ItemTime > 0f;
+    public float SpeedBoost => Item == ItemType.Speed ? Mathf.Clamp(ItemTime, 1f, 2f) : 1f;
+    public void ApplyItem(ItemType type)
+    {
+        Item = type;
+        switch (type)
+        {
+            case ItemType.Speed:
+                ItemTime = 4f;
+                break;
+            case ItemType.Defense:
+                ItemTime = Mathf.Infinity;
+                break;
+            case ItemType.Invincibility:
+                ItemTime = 10f;
+                break;
+            case ItemType.Life:
+                LifeCount++;
+                ItemTime = 0f;
+                break;
+            default:
+                ItemTime = 0f;
+                break;
+        }
+    }
+    private void UpdateItemTime()
+    {
+        if (ItemTime > Time.deltaTime)
+        {
+            ItemTime -= Time.deltaTime;
+        }
+        else
+        {
+            ItemTime = 0f;
         }
     }
 }

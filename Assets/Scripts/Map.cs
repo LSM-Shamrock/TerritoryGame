@@ -13,10 +13,20 @@ public class Map : MonoBehaviour
     [SerializeField] Tilemap virusTilemap;
     [SerializeField] Tilemap wallTilemap;
 
+
     public Vector3Int Min => Vector3Int.Min(pos1, pos2);
     public Vector3Int Max => Vector3Int.Max(pos1, pos2);
 
-    public HashSet<Vector3Int> MapArea { get; private set; } = new();
+    public HashSet<Vector3Int> MapArea
+    {
+        get
+        {
+            var result = new HashSet<Vector3Int>();
+            var bounds = new BoundsInt(Min, Max - Min + Vector3Int.one);
+            foreach (var p in bounds.allPositionsWithin) result.Add(p);
+            return result;
+        }
+    }
 
     public HashSet<Vector3Int> PlayerArea => new(MapArea.Where((p) => playerTilemap.HasTile(p)));
 
@@ -36,7 +46,6 @@ public class Map : MonoBehaviour
                 var p = new Vector3Int(x, y);
                 if (Min.x <= x && x <= Max.x && Min.y <= y && y <= Max.y)
                 {
-                    MapArea.Add(p);
                     virusTilemap.SetTile(p, tile);
                 }
                 else
@@ -51,17 +60,55 @@ public class Map : MonoBehaviour
     {
         var min = Vector3Int.Min(p1, p2);
         var max = Vector3Int.Max(p1, p2);
-        for (int y = min.y; y <= max.y; y++)
+        var bounds = new BoundsInt(min, max - min + Vector3Int.one);
+        var fillPos = MapArea.Where((p) => bounds.Contains(p) && !PlayerArea.Contains(p)).ToHashSet();
+        if (fillPos.Count > 0)
         {
-            for (int x = min.x; x <= max.x; x++)
+            foreach (var p in fillPos)
             {
-                var p = new Vector3Int(x, y);
-                if (MapArea.Contains(p))
-                {
-                    virusTilemap.SetTile(p, null);
-                    playerTilemap.SetTile(p, tile);
-                }
+                virusTilemap.SetTile(p, null);
+                playerTilemap.SetTile(p, tile);
             }
+            RandomItemSpawn();
+        }
+    }
+
+
+
+    [SerializeField] int tem1Cnt = 3;
+    [SerializeField] int tem2Cnt = 3;
+    [SerializeField] int tem3Cnt = 1;
+    [SerializeField] int tem4Cnt = 2;
+    [SerializeField] int tem5Cnt = 5;
+    [SerializeField] GameObject tem1Prefab;
+    [SerializeField] GameObject tem2Prefab;
+    [SerializeField] GameObject tem3Prefab;
+    [SerializeField] GameObject tem4Prefab;
+    [SerializeField] GameObject tem5Prefab;
+    private Dictionary<Vector3Int, GameObject> itemDict = new();
+    private void RandomItemSpawn()
+    {
+        var possiblePos = MapArea;
+        possiblePos.RemoveWhere(p => itemDict.ContainsKey(p) && itemDict[p] != null);
+
+        var temPrefabs = new List<GameObject>();
+        if(tem1Prefab != null) for (int i = 0; i < tem1Cnt; i++) temPrefabs.Add(tem1Prefab);
+        if(tem1Prefab != null) for (int i = 0; i < tem2Cnt; i++) temPrefabs.Add(tem2Prefab);
+        if(tem1Prefab != null) for (int i = 0; i < tem3Cnt; i++) temPrefabs.Add(tem3Prefab);
+        if(tem1Prefab != null) for (int i = 0; i < tem4Cnt; i++) temPrefabs.Add(tem4Prefab);
+        if(tem1Prefab != null) for (int i = 0; i < tem5Cnt; i++) temPrefabs.Add(tem5Prefab);
+
+        if (possiblePos.Count > 0 && temPrefabs.Count > 0)
+        {
+            var pos = possiblePos.ToArray()[Random.Range(0, possiblePos.Count)];
+            var prefab = temPrefabs[Random.Range(0, temPrefabs.Count)];
+            if (prefab == tem1Prefab) tem1Cnt--;
+            if (prefab == tem2Prefab) tem2Cnt--;
+            if (prefab == tem3Prefab) tem3Cnt--;
+            if (prefab == tem4Prefab) tem4Cnt--;
+            if (prefab == tem5Prefab) tem5Cnt--;
+            itemDict[pos] = Instantiate(prefab, pos, Quaternion.identity);
+            Debug.Log($"{prefab.name} »ý¼ºµÊ");
         }
     }
 }
