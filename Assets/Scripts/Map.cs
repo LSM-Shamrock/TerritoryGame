@@ -8,9 +8,7 @@ public class Map : MonoBehaviour
 {
     [SerializeField] Vector3Int pos1;
     [SerializeField] Vector3Int pos2;
-    [SerializeField] TileBase playerTile;
-    [SerializeField] TileBase virusTile;
-    [SerializeField] TileBase wallTile;
+    [SerializeField] TileBase tile;
     [SerializeField] Tilemap playerTilemap;
     [SerializeField] Tilemap virusTilemap;
     [SerializeField] Tilemap wallTilemap;
@@ -39,11 +37,11 @@ public class Map : MonoBehaviour
                 if (Min.x <= x && x <= Max.x && Min.y <= y && y <= Max.y)
                 {
                     MapArea.Add(p);
-                    virusTilemap.SetTile(p, virusTile);
+                    virusTilemap.SetTile(p, tile);
                 }
                 else
                 {
-                    wallTilemap.SetTile(p, wallTile);
+                    wallTilemap.SetTile(p, tile);
                 }
             }       
         }
@@ -61,7 +59,7 @@ public class Map : MonoBehaviour
                 if (MapArea.Contains(p))
                 {
                     virusTilemap.SetTile(p, null);
-                    playerTilemap.SetTile(p, playerTile);
+                    playerTilemap.SetTile(p, tile);
                 }
             }
         }

@@ -11,7 +11,7 @@ public class PlayerTrail : MonoBehaviour
 
     private void UpdatePoint()
     {
-        var player = FindObjectOfType<Player>();
+        var player = FindObjectOfType<PlayerUnit>();
         var p = Vector3Int.RoundToInt(player.transform.position);
         if (trailPoints.Contains(p))
         {
@@ -122,7 +122,7 @@ public class PlayerTrail : MonoBehaviour
         if (enemy != null)
         {
             trailPoints.Clear();
-            var player = FindObjectOfType<Player>();
+            var player = FindObjectOfType<PlayerUnit>();
             player.LoseLife();
         }
     }

@@ -9,7 +9,7 @@ public class CameraMover : MonoBehaviour
 
     public void Update()
     {
-        var followTarget = FindObjectOfType<Player>().transform;
+        var followTarget = FindObjectOfType<PlayerUnit>().transform;
         if (followTarget != null)
         {
             transform.position = Vector3.Lerp(transform.position, followTarget.position + offset, Time.deltaTime * moveSpeed);
