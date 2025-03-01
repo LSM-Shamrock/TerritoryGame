@@ -118,7 +118,7 @@ public class PlayerTrail : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        var enemy = collision.GetComponent<Virus>();
+        var enemy = collision.attachedRigidbody.GetComponent<Virus>();
         if (enemy != null)
         {
             trailPoints.Clear();

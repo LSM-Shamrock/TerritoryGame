@@ -105,6 +105,7 @@ public class Player : MonoBehaviour
             transform.position = endPos;
             if (MoveableArea.Contains(endPos + nextDir))
             {
+                transform.up = nextDir;
                 endPos += nextDir;
             }
         }
