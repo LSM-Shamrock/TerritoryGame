@@ -42,11 +42,11 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: PlayerTrail
-    uniqueID: 4017232553
-    locked: 0
   - name: Virus
     uniqueID: 2486543821
+    locked: 0
+  - name: PlayerTrail
+    uniqueID: 4017232553
     locked: 0
   - name: Player
     uniqueID: 2868473393

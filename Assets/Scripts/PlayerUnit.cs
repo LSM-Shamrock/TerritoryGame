@@ -136,7 +136,7 @@ public class PlayerUnit : MonoBehaviour
     public void Dead()
     {
         IsDead = true;
-        this.enabled = false;
+        Time.timeScale = 0f;
     }
 
     public ItemType Item { get; private set; }
