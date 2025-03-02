@@ -6,7 +6,6 @@ using UnityEngine;
 
 public enum ItemType
 {
-    None,
     Speed,
     Defense,
     Invincibility,

@@ -7,85 +7,85 @@ public class Virus : MonoBehaviour
 {
     public float moveSpeed = 8f;
 
-    virtual public Vector3Int RoundPos => Vector3Int.RoundToInt(transform.position);
-
-    virtual public HashSet<Vector3Int> VirusArea
-    {
-        get 
-        {
-            var map = FindObjectOfType<Map>();
-            return map.VirusArea; ;
-        }
-    }
-
-
+    private Vector3Int RoundPos => Vector3Int.RoundToInt(transform.position);
+    private HashSet<Vector3Int> MoveableArea => FindObjectOfType<Map>().VirusArea;
+     
     virtual protected void Start()
     {
         StartCoroutine(RepeatMovement());
     }
     virtual protected void Update()
     {
-        var p = Vector3Int.RoundToInt(transform.position);
-        if (!VirusArea.Contains(p))
-        {
-            Dead();
-        }
+        UpdateMove();
+        UpdateDead();
     }
 
     virtual public void Dead()
     {
         Destroy(gameObject);
     }
-
-    virtual public HashSet<Vector3Int> GetMoveableDir(Vector3Int p)
+    private void UpdateDead()
     {
-        var result = new HashSet<Vector3Int>
+        var p = Vector3Int.RoundToInt(transform.position);
+        if (!MoveableArea.Contains(p))
         {
-            Vector3Int.up,
-            Vector3Int.down,
-            Vector3Int.left,
-            Vector3Int.right,
-        };
-        result.RemoveWhere(dir => !VirusArea.Contains(p + dir));
-        return result;
-    }
-
-    virtual protected IEnumerator Move(Vector3Int endPos)
-    {
-        var moveDir = (endPos - transform.position).normalized;
-        var remainingDist = Vector3.Distance(transform.position, endPos);
-        while (remainingDist > 0)
-        {
-            var moveAmount = moveSpeed * Time.deltaTime;
-            transform.position += moveDir * moveAmount;
-            remainingDist -= moveAmount;
-            yield return null;
+            Dead();
         }
-        transform.position = endPos;
     }
 
+
+
+
+
+    Vector3 moveDir;
+    float remainingDist;
     virtual protected IEnumerator RepeatMovement()
     {
         while (true)
         {
-            var moveableDir = GetMoveableDir(RoundPos).ToArray();
-            if (moveableDir.Length == 0)
-            {
-                continue;
-            }
-            var moveDir = moveableDir[Random.Range(0, moveableDir.Length)];
-            var moveDist = Random.Range(1, 4);
-            for (int i = 1; i <= moveDist; i++)
-            {
-                var movePos = RoundPos + moveDir * i;
-                if (!VirusArea.Contains(movePos))
-                {
-                    break;
-                }
-                yield return Move(movePos);
-            }
+            var angle = Random.Range(0f, 360f);
+            var x = Mathf.Cos(angle * Mathf.Rad2Deg);
+            var y = Mathf.Sin(angle * Mathf.Rad2Deg);
+            moveDir = new(x, y);
+            remainingDist = Random.Range(1f, 4f);
+            yield return new WaitWhile(() => remainingDist > 0f);
+
             var waitTime = Random.Range(0f, 1f);
             yield return new WaitForSeconds(waitTime);
+        }
+    }
+    virtual protected void FlipDir()
+    {
+        moveDir *= -1f;
+    }
+    private void UpdateMove()
+    {
+        if (MoveableArea.Contains(Vector3Int.RoundToInt(transform.position + moveDir)))
+        {
+            var moveAmount = Mathf.Min(1, moveSpeed * Time.deltaTime);
+            transform.position += moveDir * moveAmount;
+            remainingDist -= moveAmount;
+        }
+        else
+        {
+            if (MoveableArea.Contains(Vector3Int.RoundToInt(transform.position - moveDir)))
+            {
+                FlipDir();
+            }
+            else
+            {
+                moveDir = Vector3.zero;
+            }
+        }
+    }
+
+
+    virtual protected void OnTriggerEnter2D(Collider2D collision)
+    {
+        var playerTrail = collision.GetComponent<PlayerTrail>();
+        if (playerTrail != null)
+        {
+            FlipDir();
         }
     }
 }

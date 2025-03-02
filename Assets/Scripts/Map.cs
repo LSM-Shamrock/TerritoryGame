@@ -12,6 +12,8 @@ public class Map : MonoBehaviour
     [SerializeField] Tilemap playerTilemap;
     [SerializeField] Tilemap virusTilemap;
     [SerializeField] Tilemap wallTilemap;
+    [SerializeField] TileBase obstacleTile;
+    [SerializeField] Tilemap obstacleTilemap;
 
 
     public Vector3Int Min => Vector3Int.Min(pos1, pos2);
@@ -27,10 +29,9 @@ public class Map : MonoBehaviour
             return result;
         }
     }
-
-    public HashSet<Vector3Int> PlayerArea => new(MapArea.Where((p) => playerTilemap.HasTile(p)));
-
-    public HashSet<Vector3Int> VirusArea => new(MapArea.Where((p) => virusTilemap.HasTile(p)));
+    public HashSet<Vector3Int> PlayerArea => new(MapArea.Where(p => playerTilemap.HasTile(p)));
+    public HashSet<Vector3Int> VirusArea => new(MapArea.Where(p => virusTilemap.HasTile(p)));
+    public HashSet<Vector3Int> ObstacleArea => new(MapArea.Where(p => obstacleTilemap.HasTile(p)));
 
     private void Awake()
     {
@@ -72,6 +73,8 @@ public class Map : MonoBehaviour
             RandomItemSpawn();
         }
     }
+
+
 
 
 

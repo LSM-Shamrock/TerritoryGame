@@ -9,11 +9,10 @@ public class BossVirus : Virus
     public int startSpawnCount = 5;
     public float spawnTime = 10f;
 
-    public List<Virus> Viruses => new(FindObjectsOfType<Virus>());
+    private List<Virus> Viruses => new(FindObjectsOfType<Virus>());
+    private HashSet<Vector3Int> SpawnableArea => FindObjectOfType<Map>().VirusArea;
 
-    public HashSet<Vector3Int> SpawnableArea => VirusArea;
-
-    private new void Start()
+    protected override void Start()
     {
         base.Start();
         StartCoroutine(RepeatSpawn());
