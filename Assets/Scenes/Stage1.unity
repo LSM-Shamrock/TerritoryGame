@@ -912,8 +912,16 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7587043102428101725, guid: 646cd4687049aaa439408b10ccbe5e1e, type: 3}
       propertyPath: virusPrefabs.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7587043102428101725, guid: 646cd4687049aaa439408b10ccbe5e1e, type: 3}
+      propertyPath: virusPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 3425938507143743819, guid: 8c2e5c60245ebcf40a31f1d1b29d62f6, type: 3}
+    - target: {fileID: 7587043102428101725, guid: 646cd4687049aaa439408b10ccbe5e1e, type: 3}
+      propertyPath: virusPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 2528884788686529959, guid: 735df8cf8acf47349b1bc30c35e3b282, type: 3}
     - target: {fileID: 8501253086462629784, guid: 646cd4687049aaa439408b10ccbe5e1e, type: 3}
       propertyPath: m_Name
       value: BossVirus
@@ -1171,8 +1179,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e1f16938ba1fbd44b22b44903296ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pos1: {x: 10, y: 10, z: 0}
-  pos2: {x: -10, y: -10, z: 0}
+  pos1: {x: 15, y: 15, z: 0}
+  pos2: {x: -15, y: -15, z: 0}
   tile: {fileID: 11400000, guid: d4bce3d4794de60418b15bce03818fd7, type: 2}
   playerTilemap: {fileID: 3560004127979714297}
   virusTilemap: {fileID: 5396377207245304506}

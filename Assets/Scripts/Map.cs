@@ -75,7 +75,7 @@ public class Map : MonoBehaviour
     }
 
 
-
+    
 
 
     [SerializeField] int tem1Cnt = 3;
@@ -99,7 +99,7 @@ public class Map : MonoBehaviour
         if(tem1Prefab != null) for (int i = 0; i < tem2Cnt; i++) temPrefabs.Add(tem2Prefab);
         if(tem1Prefab != null) for (int i = 0; i < tem3Cnt; i++) temPrefabs.Add(tem3Prefab);
         if(tem1Prefab != null) for (int i = 0; i < tem4Cnt; i++) temPrefabs.Add(tem4Prefab);
-        if(tem1Prefab != null) for (int i = 0; i < tem5Cnt; i++) temPrefabs.Add(tem5Prefab);
+        if(tem1Prefab != null) for (int i = 0; i < tem5Cnt; i++) temPrefabs.Add(tem5Prefab); 
 
         if (possiblePos.Count > 0 && temPrefabs.Count > 0)
         {

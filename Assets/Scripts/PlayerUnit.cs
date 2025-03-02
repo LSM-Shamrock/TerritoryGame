@@ -127,6 +127,16 @@ public class PlayerUnit : MonoBehaviour
                 LifeCount--;
             }
         }
+        if (LifeCount <= 0)
+        {
+            Dead();
+        }
+    }
+    public bool IsDead { get; private set; }
+    public void Dead()
+    {
+        IsDead = true;
+        this.enabled = false;
     }
 
     public ItemType Item { get; private set; }
