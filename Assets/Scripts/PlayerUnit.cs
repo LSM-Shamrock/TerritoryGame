@@ -132,11 +132,10 @@ public class PlayerUnit : MonoBehaviour
             Dead();
         }
     }
-    public bool IsDead { get; private set; }
     public void Dead()
     {
-        IsDead = true;
-        Time.timeScale = 0f;
+        FindObjectOfType<Stage>().GameOver();
+        this.enabled = false;
     }
 
     public ItemType Item { get; private set; }
