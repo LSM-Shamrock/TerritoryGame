@@ -44,7 +44,7 @@ public class BossVirus : Virus
             var prefab = virusPrefabs[Random.Range(0, virusPrefabs.Length)];
             var pos = SpawnableArea.ToArray()[Random.Range(0, SpawnableArea.Count)];
             var rotation = Quaternion.identity;
-            Instantiate(prefab, pos, rotation);
+            Instantiate(prefab, pos, rotation, transform.parent);
         }
     }
 }

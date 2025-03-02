@@ -70,6 +70,7 @@ public class Map : MonoBehaviour
                 virusTilemap.SetTile(p, null);
                 playerTilemap.SetTile(p, tile);
             }
+            Debug.Log(fillPos.Count + "타일 채움");
             RandomItemSpawn();
         }
     }
@@ -111,7 +112,7 @@ public class Map : MonoBehaviour
             if (prefab == tem4Prefab) tem4Cnt--;
             if (prefab == tem5Prefab) tem5Cnt--;
             itemDict[pos] = Instantiate(prefab, pos, Quaternion.identity);
-            Debug.Log($"{prefab.name} 생성됨");
+            Debug.Log($"{prefab.name} 아이템 생성됨");
         }
     }
 }
