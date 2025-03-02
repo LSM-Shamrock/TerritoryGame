@@ -128,13 +128,6 @@ public class PlayerUnit : MonoBehaviour
             }
         }
     }
-    public void LifeUp()
-    {
-        if (LifeCount < MaxLife)
-        {
-            LifeCount++;
-        }
-    }
 
     public ItemType Item { get; private set; }
     public float ItemTime { get; private set; } = 0f;
@@ -156,7 +149,8 @@ public class PlayerUnit : MonoBehaviour
                 ItemTime = 10f;
                 break;
             case ItemType.Life:
-                LifeCount++;
+                if (LifeCount < MaxLife) LifeCount++;
+                else Score += 35;
                 ItemTime = 0f;
                 break;
             default:

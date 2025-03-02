@@ -18,11 +18,11 @@ public class Virus : MonoBehaviour
         }
     }
 
+
     virtual protected void Start()
     {
         StartCoroutine(RepeatMovement());
     }
-
     virtual protected void Update()
     {
         var p = Vector3Int.RoundToInt(transform.position);

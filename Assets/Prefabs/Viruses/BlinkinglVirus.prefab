@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 7583514730119553214}
   - component: {fileID: 2735151408039992626}
   - component: {fileID: -4597597698618605717}
+  - component: {fileID: 7648933229438348382}
   m_Layer: 0
-  m_Name: TelVirus
+  m_Name: BlinkinglVirus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82,6 +83,23 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &7648933229438348382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2528884788686529959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf35d021d6bd5b4bb87027cfd6a8f6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  randSizeMin: 0.25
+  randSizeMax: 1
+  showDuration: 3
+  hideDuration: 1
 --- !u!1 &5401782529357141863
 GameObject:
   m_ObjectHideFlags: 0
