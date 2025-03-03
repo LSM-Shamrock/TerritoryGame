@@ -9,7 +9,6 @@ public class ItemUI : MonoBehaviour
     [SerializeField] Sprite temSprite_speed;
     [SerializeField] Sprite temSprite_defense;
     [SerializeField] Sprite temSprite_invincibility;
-    [SerializeField] Sprite temSprite_life;
 
     Image image;
     Image childImage;
@@ -38,11 +37,8 @@ public class ItemUI : MonoBehaviour
                 case ItemType.Invincibility:
                     childImage.sprite = temSprite_invincibility;
                     break;
-                case ItemType.Life:
-                    childImage.sprite = temSprite_life;
-                    break;
                 default:
-                    childImage.enabled = false;
+                    childImage.sprite = null;
                     break;
             }
             var a = Mathf.Min(1f, player.ItemTime / 2f);

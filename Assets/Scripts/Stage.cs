@@ -6,13 +6,20 @@ using UnityEngine.SceneManagement;
 
 public class Stage : MonoBehaviour
 {
-    public Vector2Int mapSize;
 
-    public int startVirusCount;
 
     public void StageClear()
     {
-
+        var curScene = SceneManager.GetActiveScene();
+        switch (curScene.name)
+        {
+            case "Stage1":
+                SceneManager.LoadScene("Stage2");
+                break;
+            case "Stage2":
+                SceneManager.LoadScene("BossStage");
+                break;
+        }
     }
     public void GameOver()
     {

@@ -35,7 +35,7 @@ public class Item : MonoBehaviour
             Type = types[UnityEngine.Random.Range(0, types.Count)];
         }
         Debug.Log($"{Type}æ∆¿Ã≈€ »πµÊ");
-        FindObjectOfType<ItemShow>().Show(Sprite);
+        FindObjectOfType<ItemPickup>().Show(Sprite);
         player.ApplyItem(Type);
         Destroy(gameObject);
     }

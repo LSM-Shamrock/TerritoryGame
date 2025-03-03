@@ -1,20 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class ItemShow : MonoBehaviour
+public class ItemPickup : MonoBehaviour
 {
+    SpriteRenderer sr;
     Animator animator;
-    SpriteRenderer spriteRenderer;
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = null;
+        sr = GetComponent<SpriteRenderer>();
+        sr.sprite = null;
     }
     public void Show(Sprite sprite)
     {
-        spriteRenderer.sprite = sprite;
+        sr.sprite = sprite;
         animator.Rebind();
     }
 }
