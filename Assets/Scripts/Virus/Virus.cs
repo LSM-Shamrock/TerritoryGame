@@ -5,11 +5,6 @@ using UnityEngine;
 
 public class Virus : MonoBehaviour
 {
-    public float moveSpeed = 8f;
-
-    private Vector3Int RoundPos => Vector3Int.RoundToInt(transform.position);
-    private HashSet<Vector3Int> MoveableArea => FindObjectOfType<Map>().VirusArea;
-     
     virtual protected void Start()
     {
         StartCoroutine(RepeatMovement());
@@ -20,11 +15,11 @@ public class Virus : MonoBehaviour
         UpdateDead();
     }
 
-    virtual public void Dead()
+    virtual protected void Dead()
     {
         Destroy(gameObject);
     }
-    private void UpdateDead()
+    virtual protected void UpdateDead()
     {
         var p = Vector3Int.RoundToInt(transform.position);
         if (!MoveableArea.Contains(p))
@@ -35,7 +30,11 @@ public class Virus : MonoBehaviour
 
 
 
+    private HashSet<Vector3Int> MoveableArea => FindObjectOfType<Map>().VirusArea;
+     
 
+    [SerializeField] float moveSpeed = 8f;
+    virtual public float MoveSpeed => moveSpeed;
 
     Vector3 moveDir;
     float remainingDist;
@@ -58,11 +57,11 @@ public class Virus : MonoBehaviour
     {
         moveDir *= -1f;
     }
-    private void UpdateMove()
+    virtual protected void UpdateMove()
     {
         if (MoveableArea.Contains(Vector3Int.RoundToInt(transform.position + moveDir)))
         {
-            var moveAmount = Mathf.Min(1, moveSpeed * Time.deltaTime);
+            var moveAmount = Mathf.Min(1, MoveSpeed * Time.deltaTime);
             transform.position += moveDir * moveAmount;
             remainingDist -= moveAmount;
         }

@@ -121,9 +121,11 @@ public class PlayerTrail : MonoBehaviour
         var enemy = collision.attachedRigidbody.GetComponent<Virus>();
         if (enemy != null)
         {
-            trailPoints.Clear();
             var player = FindObjectOfType<PlayerUnit>();
-            player.LifeDown();
+            if (player.TryLifeDown())
+            {
+                trailPoints.Clear();
+            }
         }
     }
 }

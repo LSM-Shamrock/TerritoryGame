@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class BlinkinglVirus : Virus
 {
-    [SerializeField] float randSizeMin;
-    [SerializeField] float randSizeMax;
+    [SerializeField] float MinSize = 0.3f;
+    [SerializeField] float MaxSize = 1f;
     [SerializeField] float showDuration;
     [SerializeField] float hideDuration;
 
@@ -34,7 +34,7 @@ public class BlinkinglVirus : Virus
 
     private IEnumerator ShowRandomScale()
     {
-        var size = Random.Range(randSizeMin, randSizeMax);
+        var size = Random.Range(MinSize, MaxSize);
         var scale = Vector3.one * size;
         var showTime = 1f;
         var showTimer = 0f;

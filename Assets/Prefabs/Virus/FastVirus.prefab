@@ -72,7 +72,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1808423475
-  m_SortingLayer: 2
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 1751039737, guid: 0c1e734fa85636743af3bc22c6d99ba8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 1715076361587264608}
   - component: {fileID: 9015476241633051768}
   - component: {fileID: 2502453100541064128}
-  - component: {fileID: 5984414920537308301}
+  - component: {fileID: 9150684320980992979}
   m_Layer: 0
   m_Name: FastVirus
   m_TagString: Untagged
@@ -203,7 +203,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &5984414920537308301
+--- !u!114 &9150684320980992979
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -212,7 +212,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6787361518511487131}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd6bfb9c2957ac546b738cb7446a6158, type: 3}
+  m_Script: {fileID: 11500000, guid: 353e626ec2d55c14dbef5fc541cadecb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 15
+  moveSpeed: 2

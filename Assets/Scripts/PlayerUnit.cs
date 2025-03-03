@@ -114,23 +114,27 @@ public class PlayerUnit : MonoBehaviour
 
     public int MaxLife { get; private set; } = 5;
     public int LifeCount { get; private set; } = 5;
-    public void LifeDown()
+    public bool TryLifeDown()
     {
-        if (!IsInvincibility)
+        if (IsInvincibility)
         {
-            if (IsDefense)
-            {
-                ItemTime = 0f;
-            }
-            else
-            {
-                LifeCount--;
-            }
+            return false;
         }
-        if (LifeCount <= 0)
+        else if (IsDefense)
         {
-            Dead();
+            ItemTime = 0f;
+            return false;
         }
+        else
+        {
+            LifeCount--;
+            if (LifeCount <= 0)
+            {
+                Dead();
+            }
+            return true;
+        }
+
     }
     public void Dead()
     {
@@ -149,13 +153,13 @@ public class PlayerUnit : MonoBehaviour
         switch (type)
         {
             case ItemType.Speed:
-                ItemTime = 4f;
+                ItemTime = 5f;
                 break;
             case ItemType.Defense:
                 ItemTime = Mathf.Infinity;
                 break;
             case ItemType.Invincibility:
-                ItemTime = 10f;
+                ItemTime = 5f;
                 break;
             case ItemType.Life:
                 if (LifeCount < MaxLife) LifeCount++;

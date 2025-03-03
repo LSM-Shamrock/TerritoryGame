@@ -6,8 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class Map : MonoBehaviour
 {
-    [SerializeField] Vector3Int pos1;
-    [SerializeField] Vector3Int pos2;
+    [SerializeField] Vector2Int size;
     [SerializeField] TileBase tile;
     [SerializeField] Tilemap playerTilemap;
     [SerializeField] Tilemap virusTilemap;
@@ -16,8 +15,8 @@ public class Map : MonoBehaviour
     [SerializeField] Tilemap obstacleTilemap;
 
 
-    public Vector3Int Min => Vector3Int.Min(pos1, pos2);
-    public Vector3Int Max => Vector3Int.Max(pos1, pos2);
+    public Vector3Int Min => Vector3Int.Min(Vector3Int.zero, (Vector3Int)size);
+    public Vector3Int Max => Vector3Int.Max(Vector3Int.zero, (Vector3Int)size);
 
     public HashSet<Vector3Int> MapArea
     {
@@ -37,7 +36,6 @@ public class Map : MonoBehaviour
     {
         SetupTiles();
     }
-
     private void SetupTiles()
     {
         for (int y = Min.y - 1; y <= Max.y + 1; y++)
@@ -56,7 +54,6 @@ public class Map : MonoBehaviour
             }       
         }
     }
-
     public void FillPlayerArea(Vector3Int p1, Vector3Int p2)
     {
         var min = Vector3Int.Min(p1, p2);
@@ -76,43 +73,42 @@ public class Map : MonoBehaviour
     }
 
 
-    
 
 
-    [SerializeField] int tem1Cnt = 3;
-    [SerializeField] int tem2Cnt = 3;
-    [SerializeField] int tem3Cnt = 1;
-    [SerializeField] int tem4Cnt = 2;
-    [SerializeField] int tem5Cnt = 5;
-    [SerializeField] GameObject tem1Prefab;
-    [SerializeField] GameObject tem2Prefab;
-    [SerializeField] GameObject tem3Prefab;
-    [SerializeField] GameObject tem4Prefab;
-    [SerializeField] GameObject tem5Prefab;
+    [SerializeField] GameObject itemPrefab;
+    List<ItemType> items = new()
+    {
+        ItemType.Speed,
+        ItemType.Speed,
+        ItemType.Speed,
+        ItemType.Defense,
+        ItemType.Defense,
+        ItemType.Defense,
+        ItemType.Invincibility,
+        ItemType.Life,
+        ItemType.Life,
+        ItemType.Random,
+        ItemType.Random,
+        ItemType.Random,
+        ItemType.Random,
+        ItemType.Random,
+    };
     private Dictionary<Vector3Int, GameObject> itemDict = new();
     private void RandomItemSpawn()
     {
-        var possiblePos = MapArea;
-        possiblePos.RemoveWhere(p => itemDict.ContainsKey(p) && itemDict[p] != null);
-
-        var temPrefabs = new List<GameObject>();
-        if(tem1Prefab != null) for (int i = 0; i < tem1Cnt; i++) temPrefabs.Add(tem1Prefab);
-        if(tem1Prefab != null) for (int i = 0; i < tem2Cnt; i++) temPrefabs.Add(tem2Prefab);
-        if(tem1Prefab != null) for (int i = 0; i < tem3Cnt; i++) temPrefabs.Add(tem3Prefab);
-        if(tem1Prefab != null) for (int i = 0; i < tem4Cnt; i++) temPrefabs.Add(tem4Prefab);
-        if(tem1Prefab != null) for (int i = 0; i < tem5Cnt; i++) temPrefabs.Add(tem5Prefab); 
-
-        if (possiblePos.Count > 0 && temPrefabs.Count > 0)
+        var possiblePos = MapArea.Where(p => !itemDict.ContainsKey(p) || itemDict[p] == null).ToHashSet();
+        if (possiblePos.Count > 0 && items.Count > 0)
         {
             var pos = possiblePos.ToArray()[Random.Range(0, possiblePos.Count)];
-            var prefab = temPrefabs[Random.Range(0, temPrefabs.Count)];
-            if (prefab == tem1Prefab) tem1Cnt--;
-            if (prefab == tem2Prefab) tem2Cnt--;
-            if (prefab == tem3Prefab) tem3Cnt--;
-            if (prefab == tem4Prefab) tem4Cnt--;
-            if (prefab == tem5Prefab) tem5Cnt--;
-            itemDict[pos] = Instantiate(prefab, pos, Quaternion.identity);
-            Debug.Log($"{prefab.name} 아이템 생성됨");
+
+            var itemType = items[Random.Range(0, items.Count)];
+            items.Remove(itemType);
+
+            var go = Instantiate(itemPrefab, pos, Quaternion.identity);
+            go.GetComponent<Item>().Type = itemType;
+            itemDict[pos] = go;
+
+            Debug.Log($"{itemType} 아이템 생성됨");
         }
     }
 }

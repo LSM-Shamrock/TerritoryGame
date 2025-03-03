@@ -15,28 +15,73 @@ public enum ItemType
 
 public class Item : MonoBehaviour
 {
-    [SerializeField] ItemType type;
+    public ItemType Type { get; set; }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         var player = collision.attachedRigidbody.GetComponent<PlayerUnit>();
         if (player != null)
         {
-            AcquireItem();
+            GetItem();
         }
     }
-
-    protected virtual void AcquireItem()
+    protected virtual void GetItem()
     {
         var player = FindObjectOfType<PlayerUnit>();
-        if (type == ItemType.Random)
+        if (Type == ItemType.Random)
         {
             var types = Enum.GetValues(typeof(ItemType)).Cast<ItemType>().ToList();
             types.Remove(ItemType.Random);
-            type = types[UnityEngine.Random.Range(0, types.Count)];
+            Type = types[UnityEngine.Random.Range(0, types.Count)];
         }
-        Debug.Log($"{type}æ∆¿Ã≈€ »πµÊ");
-        player.ApplyItem(type);
+        Debug.Log($"{Type}æ∆¿Ã≈€ »πµÊ");
+        FindObjectOfType<ItemShow>().Show(Sprite);
+        player.ApplyItem(Type);
         Destroy(gameObject);
+    }
+
+
+    public Sprite sprite_Speed;
+    public Sprite sprite_Defense;
+    public Sprite sprite_Invincibility;
+    public Sprite sprite_Life;
+    public Sprite sprite_Random;
+    public Sprite Sprite
+    {
+        get 
+        {
+            Sprite result;
+            switch (Type)
+            {
+                case ItemType.Speed: 
+                    result = sprite_Speed;
+                    break;
+                case ItemType.Defense: 
+                    result = sprite_Defense;
+                    break;
+                case ItemType.Invincibility: 
+                    result = sprite_Invincibility;
+                    break;
+                case ItemType.Life: 
+                    result = sprite_Life;
+                    break;
+                case ItemType.Random: 
+                    result = sprite_Random;
+                    break;
+                default: 
+                    result = null;
+                    break;
+            }
+            return result;
+        }
+    }
+    SpriteRenderer spriteRenderer;
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+    private void Update()
+    {
+        spriteRenderer.sprite = Sprite;
     }
 }

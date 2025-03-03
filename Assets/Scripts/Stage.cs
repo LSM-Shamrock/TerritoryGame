@@ -6,21 +6,22 @@ using UnityEngine.SceneManagement;
 
 public class Stage : MonoBehaviour
 {
+    public Vector2Int mapSize;
+
+    public int startVirusCount;
+
     public void StageClear()
     {
 
     }
-
     public void GameOver()
     {
         FindObjectOfType<GameOverUI>(true).Show();
     }
-
     public void Retry()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
     public void Exit()
     {
         SceneManager.LoadScene("Menu");
